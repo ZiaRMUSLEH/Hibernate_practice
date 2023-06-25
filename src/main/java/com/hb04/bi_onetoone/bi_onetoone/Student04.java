@@ -1,4 +1,4 @@
-package com.hb04.bi.onetoone;
+package com.hb04.bi_onetoone.bi_onetoone;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
