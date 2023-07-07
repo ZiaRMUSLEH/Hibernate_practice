@@ -9,57 +9,78 @@ import java.util.Arrays;
 import java.util.List;
 
 public class RunnerFetch07 {
-    public static void main (String[] args) {
+    public static void main(String[] args) {
 
-        Configuration con = new Configuration()
-                .configure("hibernate.cfg.xml")
+        Configuration configuration = new Configuration().configure("hibernate.cfg.xml")
                 .addAnnotatedClass(Student07.class)
                 .addAnnotatedClass(Book07.class);
-        SessionFactory sf = con.buildSessionFactory();
-        Session session = sf.openSession();
+
+        SessionFactory sessionFactory = configuration.buildSessionFactory();
+        Session session = sessionFactory.openSession();
         Transaction tx = session.beginTransaction();
 
-
         // Get the student with ID: 1001, using a method.
-       // Student07 student1 = session.get(Student07.class, 1001l);
-       // System.out.println(student1);
-
+        Student07 student1 = session.get(Student07.class, 1001L);
+        //System.out.println(student1);
 
         // Get the books of student1.
-        //List<Book07> books = student1.getBookList();
-       // books.forEach(book-> System.out.println(book));
+        List<Book07> bookList = student1.getBookList();
+        //System.out.println(bookList);
+        //student1.getBookList().forEach(stu-> System.out.println(stu));
 
         // Get the book with ID: 101
-        //Book07 book = session.get(Book07.class,101l);
-        //System.out.println(book);
+        Book07 book1 = session.get(Book07.class, 101L);
+        System.out.println("Book 1: "+ book1);
+
         // Get the student information from the book object
-        //System.out.println(book.getStudent());
+        //System.out.println(book1.getStudent());
+
         // Fetch the assigned student name and book names, using SQL from Student
-        //String sql1 = "SELECT s.stu_name, b.name  FROM t_student07 s INNER JOIN t_book07 b ON s.id=b.stu_id";
-        //List<Object[]> resultList = session.createSQLQuery(sql1).getResultList();
-        //resultList.forEach(name-> System.out.println(Arrays.toString(name)));
+        String sqlQuery1 = "SELECT s.stu_name, b.name FROM t_student07 s INNER JOIN t_book07 b ON s.id = b.stu_id";
+        List<Object[]> resultList1 = session.createSQLQuery(sqlQuery1).getResultList();
+        for (Object[] obj : resultList1){
+            System.out.println(Arrays.toString(obj));
+        }
 
         // Do the upper task with HQL
-        //String hql1 = "SELECT s.name, b.name FROM Student07 s INNER JOIN Book07 b ON s.id=b.student.id";
-        //List<Object[]> resultList1 = session.createQuery(hql1).getResultList();
-        //resultList1.forEach(names-> System.out.println(Arrays.toString(names)));
+        String hqlQuery1 = "SELECT s.name, b.name FROM Student07 s INNER JOIN Book07 b ON s.id = b.student.id";
+        List<Object[]> resultList2 = session.createQuery(hqlQuery1).getResultList();
+        for (Object[] obj : resultList2){
+            System.out.println(Arrays.toString(obj));
+        }
+        //resultList2.forEach(obj-> System.out.println(obj));
+        //resultList2.forEach(System.out::println);
 
-         //Delete all the records from Book07 with SQL
-//        String sql2 = "DELETE FROM t_book07";
-//        int deletedRows = session.createSQLQuery(sql2).executeUpdate();
-//        System.out.println(deletedRows);
+        // Delete all the records from Book07 with SQL.
+        //String sqlQuery2 = "DELETE FROM t_book07";
+        //int deletedRowCount = session.createSQLQuery(sqlQuery2).executeUpdate();
+        //System.out.println("Deleted Row Count: "+deletedRowCount);
 
         // Delete all the records from Student07 with HQL.
-        String hql2 = "DELETE FROM Student07";
-        int deletedRows1 = session.createQuery(hql2).executeUpdate();
-        System.out.println(deletedRows1);
+        //String hqlQuery2 = "DELETE FROM Student07";
+        //int deletedRowCountHql = session.createQuery(hqlQuery2).executeUpdate();
+        //System.out.println("Deleted Row Count For HQL: "+deletedRowCountHql);
 
+        /*
+
+        A Book (0)      ->  Student07.getBookList().set(0, null);
+        B Book (1)      ->
+
+         */
+
+        // Remove A Book with Orphan Removal
+        //bookList.set(0,null);
+
+        // Write an HQL Query, which will bring students whose book name contains the word "Book".
+        String hqlQuery3 = "SELECT s FROM Student07 s JOIN s.bookList b WHERE b.name LIKE '%Book%'";
+        List<Student07> resultList3 = session.createQuery(hqlQuery3, Student07.class).getResultList();
+        for (Student07 stu : resultList3){
+            System.out.println(stu);
+        }
 
         tx.commit();
         session.close();
-        sf.close();
-
-
+        sessionFactory.close();
 
     }
 }
