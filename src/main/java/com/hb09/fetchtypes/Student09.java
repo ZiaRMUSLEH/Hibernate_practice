@@ -8,6 +8,17 @@ import java.util.List;
 @Table(name = "t_student09")
 public class Student09 {
 
+    /*
+
+            1. If the next side is Many, then the default Type is LAZY.
+                    OneToMany
+                    ManyToMany
+            2. If the next side is One, then the default Type is EAGER.
+                    ManyToOne
+                    OneToOne
+
+     */
+
     @Id
     private Long id;
 
@@ -16,48 +27,49 @@ public class Student09 {
 
     private int grade;
 
-    @OneToMany(mappedBy = "student",cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "student", cascade = CascadeType.ALL, fetch = FetchType.EAGER)     // CascadeType.REMOVE / CascadeType.PERSIST
     private List<Book09> bookList = new ArrayList<>();
 
-    public Long getId () {
+    // Getter - Setter
+    public Long getId() {
         return id;
     }
 
-    public void setId (Long id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
-    public String getName () {
+    public String getName() {
         return name;
     }
 
-    public void setName (String name) {
+    public void setName(String name) {
         this.name = name;
     }
 
-    public int getGrade () {
+    public int getGrade() {
         return grade;
     }
 
-    public void setGrade (int grade) {
+    public void setGrade(int grade) {
         this.grade = grade;
     }
 
-    public List<Book09> getBookList () {
+    public List<Book09> getBookList() {
         return bookList;
     }
 
-    public void setBookList (List<Book09> bookList) {
+    public void setBookList(List<Book09> bookList) {
         this.bookList = bookList;
     }
 
     @Override
-    public String toString () {
+    public String toString() {
         return "Student09{" +
                 "id=" + id +
                 ", name='" + name + '\'' +
                 ", grade=" + grade +
-                //", bookList=" + bookList +
+                ", bookList=" + bookList +
                 '}';
     }
 }
