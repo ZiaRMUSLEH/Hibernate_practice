@@ -74,16 +74,13 @@ public class RunnerFetch11 {
 
         // Find the records whose id is equal to 1, or grade is greater than 75
         // Predicate
-        Predicate predicate1 = criteriaBuilder.equal(root.get("id"),1L);
-        Predicate predicate2 = criteriaBuilder.greaterThan(root.get("grade"),75);
-        Predicate predicate3 = criteriaBuilder.or(predicate1,predicate2);
-        criteriaQuery.where(predicate3);
-        Query<Student11> query5 = session.createQuery(criteriaQuery);
-        List<Student11> list5 = query5.getResultList();
+
+        Predicate predicateId = criteriaBuilder.equal(root.get("id"),1L);
+        Predicate predicateGrade = criteriaBuilder.greaterThan(root.get("grade"),75);
+        Predicate predicateOr = criteriaBuilder.or(predicateId,predicateGrade);
+        criteriaQuery.where(predicateOr);
+        List<Student11> list5 = session.createQuery(criteriaQuery).getResultList();
         list5.forEach(System.out::println);
-
-
-
 
 
 
